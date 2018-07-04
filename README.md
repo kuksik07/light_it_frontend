@@ -1,3 +1,3 @@
-npm install
-npm start
-localhost:3000
+- `npm install` <br>
+- `npm start` <br>
+- `localhost:3000` <br>
