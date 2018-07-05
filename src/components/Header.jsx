@@ -4,6 +4,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import { Link } from "react-router-dom";
+import classNames from 'classnames'
 
 const styles = {
     root: {
@@ -14,6 +16,11 @@ const styles = {
     flex: {
         flex: 1,
     },
+    link: {
+        display: 'block',
+        textDecoration: 'none',
+        color: 'inherit'
+    }
 }
 
 class Header extends Component {
@@ -22,10 +29,14 @@ class Header extends Component {
         return (
             <AppBar position="static" className={classes.root}>
                 <Toolbar>
-                    <Typography variant="title" color="inherit" className={classes.flex}>
-                        Product catalog
-                    </Typography>
-                    <Button color="inherit">Login</Button>
+                    <Link to = {'/'} className = {classNames(classes.link, classes.flex)}>
+                        <Typography variant="title" color="inherit">
+                            Product catalog
+                        </Typography>
+                    </Link>
+                    <Link to = {'/signIn'} className = {classes.link}>
+                        <Button color="inherit">Login</Button>
+                    </Link>
                 </Toolbar>
             </AppBar>
         )

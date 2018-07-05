@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles'
 import Star from '@material-ui/icons/Star'
@@ -49,23 +49,23 @@ class StarsRating extends Component{
         this.state.reviews.map((review) => {
             rateSum += review.rate;
             reviewsCount ++;
+            return {}
         })
 
-        const rateAvg = rateSum / (reviewsCount + 1);
+        const rateAvg = rateSum / (reviewsCount + 1)
 
         let stars = []
 
         for (let i = 0; i < 5; i++ ){
-            if (rateAvg - i >= 1) {
+            if (rateAvg - i >= 0.75) {
                 stars.push(<Star key = {i} className = {this.props.classes.stars} />)
-            } else if (rateAvg - i >= 0.5 && rateAvg - i < 1 ) {
+            } else if (rateAvg - i >= 0.25 && rateAvg - i < 0.75 ) {
                 stars.push(<StarHalf key = {i} className = {this.props.classes.stars} />)
             } else {
                 stars.push(<StarBorder key = {i} className = {this.props.classes.stars} />)
             }
         }
-
-        return {stars, rateAvg, reviewsCount};
+        return {stars, rateAvg, reviewsCount}
     }
 
     render () {

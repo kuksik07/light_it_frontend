@@ -8,7 +8,6 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import StarsRating from './StarsRating'
-import axios from "axios/index";
 
 const styles = {
     card: {
@@ -40,7 +39,7 @@ class ProductLessInfo extends Component{
                     <StarsRating product_id = { id } />
                 </CardContent>
                 <CardActions>
-                    <Button size="small" color="primary">
+                    <Button color="primary">
                         Learn More
                     </Button>
                 </CardActions>
