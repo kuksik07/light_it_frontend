@@ -9,7 +9,7 @@ const auth = (state = initialState, {type, payload}) => {
         case SIGN_IN: {
             return {
                 ...state,
-                user: payload,
+                user: payload.data,
             }
         }
 

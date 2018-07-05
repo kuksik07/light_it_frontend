@@ -43,11 +43,16 @@ class StarsRating extends Component {
         this.props.dispatch(signIn(this.state))
     }
 
+    componentDidUpdate(prevProps, prevStates, snapshot) {
+        if (prevProps !== this.props){
+            this.props.user && this.props.user.success && this.props.history.push('/')
+        }
+    }
+
     render() {
         const {classes, user} = this.props
         return (
             <form onSubmit={this.handleSubmit}>
-                {console.log(user)}
                 <Card className={classes.card}>
                     <CardContent>
                         <Typography variant="title">
@@ -65,6 +70,9 @@ class StarsRating extends Component {
                             onChange={this.handleChange('password')}
                             margin="normal"
                         />
+                        <Typography variant="caption" color="error">
+                            {user && user.message}
+                        </Typography>
                     </CardContent>
                     <CardActions>
                         <Button type='submit' className={classes.btn} color="primary">Sign In</Button>
@@ -75,4 +83,8 @@ class StarsRating extends Component {
     }
 }
 
-export default connect()(withStyles(styles)(StarsRating))
+const mapStateToProps = store => ({
+    user: store.user
+})
+
+export default connect(mapStateToProps)(withStyles(styles)(StarsRating))
