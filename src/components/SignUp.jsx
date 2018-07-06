@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import {Link} from "react-router-dom"
-/*import axios from "axios/index";
-import PropTypes from 'prop-types';*/
+import PropTypes from 'prop-types';
+import {withFormik} from 'formik'
+import * as Yup from 'yup'
 import {connect} from 'react-redux'
 import {withStyles} from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
@@ -19,27 +20,15 @@ import {signUp} from "../redux/actions/auth.action"
 const styles = {
     card: {
         margin: '64px auto 0',
-        textAlign: 'center',
         width: '350px',
     },
     cardActions: {
         display: 'block',
     },
-    btn: {
-        margin: '0 auto',
-    },
     link: {
         textDecoration: 'none',
         color: 'inherit',
-        margin: '0 auto',
     },
-    pg8: {
-        padding: '8px'
-    },
-    content: {
-        width: '250px',
-        margin: '0 auto'
-    }
 }
 
 class SignUp extends Component {
@@ -47,43 +36,8 @@ class SignUp extends Component {
         super(props)
 
         this.state = {
-            username: '',
-            password: '',
-            confirmPassword: '',
-            isPasswordMatch: true,
             showPassword: false,
             showConfirmPassword: false
-        }
-    }
-
-    handleChange = name => event => {
-        this.setState({
-            [name]: event.target.value,
-        })
-    }
-
-    handlePasswordMatch = async () => {
-        if (this.state.password === this.state.confirmPassword) {
-            await this.setState({
-                isPasswordMatch: true,
-            })
-        } else {
-            await this.setState({
-                isPasswordMatch: false,
-            })
-        }
-        return this.state.isPasswordMatch
-    }
-
-    handleSubmit = event => {
-        event.preventDefault()
-        let isPasswordError = this.handlePasswordMatch()
-        let user = {
-            username: this.state.username,
-            password: this.state.password
-        }
-        if (isPasswordError) {
-            this.props.dispatch(signUp(user))
         }
     }
 
@@ -95,40 +49,53 @@ class SignUp extends Component {
 
     handleMouseDownPassword = event => {
         event.preventDefault();
-    };
+    }
 
     handleClickShowPassword = () => {
         this.setState(state => ({showPassword: !state.showPassword}));
-    };
+    }
 
     handleClickShowConfirmPassword = () => {
         this.setState(state => ({showConfirmPassword: !state.showConfirmPassword}));
-    };
+    }
 
     render() {
-        const {isPasswordMatch} = this.state
-        const {classes} = this.props
+        const {
+            classes,
+            values,
+            errors,
+            touched,
+            isSubmitting,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+        } = this.props
         return (
-            <form onSubmit={this.handleSubmit}>
-                <Card className={classes.card}>
-                    <CardContent className={classes.content}>
-                        <Typography variant="title">
+            <form onSubmit={handleSubmit}>
+                <Card raised className={classes.card}>
+                    <CardContent>
+                        <Typography variant="title" align='center'>
                             Sign Up
                         </Typography>
                         <TextField
-                            id="username"
-                            label="Username"
-                            onChange={this.handleChange('username')}
+                            error={errors.username && touched.username && true}
+                            name="username"
+                            label={errors.username && touched.username ? errors.username : 'Username'}
                             margin="normal"
+                            value={values.username}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
                             fullWidth
                         />
                         <TextField
-                            id="password"
-                            label="Password"
-                            onChange={this.handleChange('password')}
+                            error={errors.password && touched.password && true}
+                            name="password"
+                            label={errors.password && touched.password ? errors.password : 'Password'}
                             margin="normal"
                             type={this.state.showPassword ? 'text' : 'password'}
-                            value={this.state.password}
+                            value={values.password}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
                             fullWidth
                             InputProps={{
                                 endAdornment: (
@@ -145,12 +112,15 @@ class SignUp extends Component {
                             }}
                         />
                         <TextField
-                            id="confirmPassword"
-                            label="Confirm password"
-                            onChange={this.handleChange('confirmPassword')}
+                            error={errors.confirmPassword && touched.confirmPassword && true}
+                            name="confirmPassword"
+                            label={errors.confirmPassword && touched.confirmPassword ?
+                                errors.confirmPassword : 'Confirm password'}
                             margin="normal"
                             type={this.state.showConfirmPassword ? 'text' : 'password'}
-                            value={this.state.confirmPassword}
+                            value={values.confirmPassword}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
                             fullWidth
                             InputProps={{
                                 endAdornment: (
@@ -166,14 +136,26 @@ class SignUp extends Component {
                                 ),
                             }}
                         />
-                        <Typography variant="caption" color="error">
-                            {!isPasswordMatch && 'Passwords do not match'}
+                        <Typography variant="caption" align="center" color="error">
+                            {
+                                touched.password && touched.confirmPassword &&
+                                values.password !== values.confirmPassword && 'Passwords do not match'
+                            }
                         </Typography>
                     </CardContent>
                     <CardActions className={classes.cardActions}>
-                        <Button type='submit' className={classes.btn} color="primary">Sign Up</Button>
+                        <Button
+                            variant='contained'
+                            type='submit'
+                            color='primary'
+                            disabled={isSubmitting}
+                            size='large'
+                            fullWidth
+                        >
+                            Sign Up
+                        </Button>
                         <Link to={'/signIn'} className={classes.link}>
-                            <Typography variant="caption" className={classes.pg8}>
+                            <Typography variant="body1" align='center'>
                                 Have an account?
                             </Typography>
                         </Link>
@@ -184,8 +166,52 @@ class SignUp extends Component {
     }
 }
 
+SignUp.propTypes = {
+    classes: PropTypes.object.isRequired,
+    user: PropTypes.object,
+    values: PropTypes.object.isRequired,
+    touched: PropTypes.object.isRequired,
+    errors: PropTypes.object.isRequired,
+    isSubmitting: PropTypes.bool.isRequired,
+    handleChange: PropTypes.func.isRequired,
+    handleBlur: PropTypes.func.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
+}
+
+SignUp.defaultProps = {
+    user: null,
+}
+
 const mapStateToProps = store => ({
     user: store.user
 })
 
-export default connect(mapStateToProps)(withStyles(styles)(SignUp))
+export default connect(mapStateToProps)(withFormik({
+    mapPropsToValues: () => ({
+        username: '',
+        password: '',
+        confirmPassword: '',
+    }),
+
+    validationSchema: Yup.object().shape({
+        username: Yup.string()
+            .required('Username is required'),
+
+        password: Yup.string()
+            .min(6, 'The minimum password length is 6')
+            .required('Password is required'),
+
+        confirmPassword: Yup.string()
+            .min(6, 'The minimum password length is 6')
+            .required('Confirm password is required'),
+    }),
+    handleSubmit: (values, {props, setSubmitting}) => {
+        setTimeout(() => {
+            if (values.password === values.confirmPassword) {
+                props.dispatch(signUp(values))
+            }
+            setSubmitting(false)
+        }, 500)
+    },
+    displayName: 'SignUp',
+})(withStyles(styles)(SignUp)))

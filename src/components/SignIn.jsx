@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import {Link} from "react-router-dom"
-/*import axios from "axios/index";
-import PropTypes from 'prop-types';*/
+import PropTypes from 'prop-types';
+import {withFormik} from 'formik'
+import * as Yup from 'yup'
 import {connect} from 'react-redux'
 import {withStyles} from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
@@ -19,7 +20,6 @@ import {signIn} from '../redux/actions/auth.action'
 const styles = {
     card: {
         margin: '64px auto 0',
-        textAlign: 'center',
         width: '350px'
     },
     cardActions: {
@@ -31,15 +31,7 @@ const styles = {
     link: {
         textDecoration: 'none',
         color: 'inherit',
-        margin: '0 auto',
     },
-    pg8: {
-        padding: '8px'
-    },
-    content: {
-        width: '250px',
-        margin: '0 auto'
-    }
 }
 
 class SignIn extends Component {
@@ -47,25 +39,8 @@ class SignIn extends Component {
         super(props)
 
         this.state = {
-            username: '',
-            password: '',
             showPassword: false
         }
-    }
-
-    handleChange = name => event => {
-        this.setState({
-            [name]: event.target.value,
-        })
-    }
-
-    handleSubmit = (event) => {
-        event.preventDefault()
-        let user = {
-            username: this.state.username,
-            password: this.state.password
-        }
-        this.props.dispatch(signIn(user))
     }
 
     componentDidUpdate(prevProps, prevStates, snapshot) {
@@ -76,35 +51,50 @@ class SignIn extends Component {
 
     handleMouseDownPassword = event => {
         event.preventDefault();
-    };
+    }
 
     handleClickShowPassword = () => {
         this.setState(state => ({showPassword: !state.showPassword}));
-    };
+    }
 
     render() {
-        const {classes, user} = this.props
+        const {
+            classes,
+            user,
+            values,
+            errors,
+            touched,
+            isSubmitting,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+        } = this.props
         return (
-            <form onSubmit={this.handleSubmit}>
-                <Card className={classes.card}>
-                    <CardContent className={classes.content}>
-                        <Typography variant="title">
+            <form onSubmit={handleSubmit}>
+                <Card raised className={classes.card}>
+                    <CardContent>
+                        <Typography variant="title" align="center">
                             Sign In
                         </Typography>
                         <TextField
-                            id="username"
-                            label="Username"
-                            onChange={this.handleChange('username')}
+                            error={errors.username && touched.username && true}
+                            name="username"
+                            label={errors.username && touched.username ? errors.username : 'Username'}
                             margin="normal"
+                            value={values.username}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
                             fullWidth
                         />
                         <TextField
-                            id="password"
-                            label="Password"
-                            onChange={this.handleChange('password')}
+                            error={errors.password && touched.password && true}
+                            name="password"
+                            label={errors.password && touched.password ? errors.password : 'Password'}
                             margin="normal"
                             type={this.state.showPassword ? 'text' : 'password'}
-                            value={this.state.password}
+                            value={values.password}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
                             fullWidth
                             InputProps={{
                                 endAdornment: (
@@ -120,15 +110,24 @@ class SignIn extends Component {
                                 ),
                             }}
                         />
-                        <Typography variant="caption" color="error">
+                        <Typography variant="caption" align="center" color="error">
                             {user && user.message}
                         </Typography>
                     </CardContent>
                     <CardActions className={classes.cardActions}>
-                        <Button type='submit' className={classes.btn} color="primary">Sign In</Button>
+                        <Button
+                            variant="contained"
+                            size="large"
+                            type='submit'
+                            color="primary"
+                            disabled={isSubmitting}
+                            fullWidth
+                        >
+                            Sign In
+                        </Button>
                         <Link to={'/signUp'} className={classes.link}>
-                            <Typography variant="caption" className={classes.pg8}>
-                                No account?
+                            <Typography variant="body1" align="center">
+                                No account? Sign up
                             </Typography>
                         </Link>
                     </CardActions>
@@ -138,8 +137,44 @@ class SignIn extends Component {
     }
 }
 
+SignIn.propTypes = {
+    classes: PropTypes.object.isRequired,
+    user: PropTypes.object,
+    values: PropTypes.object.isRequired,
+    touched: PropTypes.object.isRequired,
+    errors: PropTypes.object.isRequired,
+    isSubmitting: PropTypes.bool.isRequired,
+    handleChange: PropTypes.func.isRequired,
+    handleBlur: PropTypes.func.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
+}
+
+SignIn.defaultProps = {
+    user: null,
+}
+
 const mapStateToProps = store => ({
     user: store.user
 })
 
-export default connect(mapStateToProps)(withStyles(styles)(SignIn))
+export default connect(mapStateToProps)(withFormik({
+    mapPropsToValues: () => ({
+        username: '',
+        password: '',
+    }),
+
+    validationSchema: Yup.object().shape({
+        username: Yup.string()
+            .required('Username is required'),
+        password: Yup.string()
+            .min(6, 'The minimum password length is 6')
+            .required('Password is required'),
+    }),
+    handleSubmit: (values, {props, setSubmitting}) => {
+        setTimeout(() => {
+            props.dispatch(signIn(values))
+            setSubmitting(false)
+        }, 500)
+    },
+    displayName: 'SignIn',
+})(withStyles(styles)(SignIn)))
