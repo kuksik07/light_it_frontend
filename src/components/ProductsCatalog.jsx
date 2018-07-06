@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ProductLessInfo from './ProductLessInfo'
 
@@ -20,22 +20,30 @@ class ProductsCatalog extends Component{
         }
     }
 
+    token = localStorage.getItem('token') !== null && localStorage.getItem('token').replace(/"/g, '')
+
+    config = {
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Token ' + this.token
+        }
+    };
+
     componentDidMount () {
-        axios.get('http://smktesting.herokuapp.com/api/products/')
+        axios.get('http://smktesting.herokuapp.com/api/products/', this.config )
             .then(res => {
                 this.setState({
                     products: res.data
                 })
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error)
             });
     }
 
     render () {
         const { classes } = this.props;
         const { products } = this.state
-
         return (
             <div className={classes.catalog_wrapper}>
                 {products.map((product) =>
@@ -49,10 +57,6 @@ class ProductsCatalog extends Component{
             </div>
         )
     }
-}
-
-ProductsCatalog.propTypes = {
-    classes: PropTypes.object.isRequired,
 }
 
 export default withStyles(styles)(ProductsCatalog)

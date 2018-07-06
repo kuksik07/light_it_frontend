@@ -14,19 +14,19 @@ import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import IconButton from '@material-ui/core/es/IconButton/IconButton'
 import InputAdornment from '@material-ui/core/es/InputAdornment/InputAdornment'
-import {signIn} from '../redux/actions/auth.action'
+import {signUp} from "../redux/actions/auth.action"
 
 const styles = {
     card: {
         margin: '64px auto 0',
         textAlign: 'center',
-        width: '350px'
+        width: '350px',
     },
     cardActions: {
         display: 'block',
     },
     btn: {
-        margin: '0 auto'
+        margin: '0 auto',
     },
     link: {
         textDecoration: 'none',
@@ -42,14 +42,17 @@ const styles = {
     }
 }
 
-class SignIn extends Component {
+class SignUp extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
             username: '',
             password: '',
-            showPassword: false
+            confirmPassword: '',
+            isPasswordMatch: true,
+            showPassword: false,
+            showConfirmPassword: false
         }
     }
 
@@ -59,13 +62,29 @@ class SignIn extends Component {
         })
     }
 
-    handleSubmit = (event) => {
+    handlePasswordMatch = async () => {
+        if (this.state.password === this.state.confirmPassword) {
+            await this.setState({
+                isPasswordMatch: true,
+            })
+        } else {
+            await this.setState({
+                isPasswordMatch: false,
+            })
+        }
+        return this.state.isPasswordMatch
+    }
+
+    handleSubmit = event => {
         event.preventDefault()
+        let isPasswordError = this.handlePasswordMatch()
         let user = {
             username: this.state.username,
             password: this.state.password
         }
-        this.props.dispatch(signIn(user))
+        if (isPasswordError) {
+            this.props.dispatch(signUp(user))
+        }
     }
 
     componentDidUpdate(prevProps, prevStates, snapshot) {
@@ -82,14 +101,19 @@ class SignIn extends Component {
         this.setState(state => ({showPassword: !state.showPassword}));
     };
 
+    handleClickShowConfirmPassword = () => {
+        this.setState(state => ({showConfirmPassword: !state.showConfirmPassword}));
+    };
+
     render() {
-        const {classes, user} = this.props
+        const {isPasswordMatch} = this.state
+        const {classes} = this.props
         return (
             <form onSubmit={this.handleSubmit}>
                 <Card className={classes.card}>
                     <CardContent className={classes.content}>
                         <Typography variant="title">
-                            Sign In
+                            Sign Up
                         </Typography>
                         <TextField
                             id="username"
@@ -120,15 +144,37 @@ class SignIn extends Component {
                                 ),
                             }}
                         />
+                        <TextField
+                            id="confirmPassword"
+                            label="Confirm password"
+                            onChange={this.handleChange('confirmPassword')}
+                            margin="normal"
+                            type={this.state.showConfirmPassword ? 'text' : 'password'}
+                            value={this.state.confirmPassword}
+                            fullWidth
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="Toggle password visibility"
+                                            onClick={this.handleClickShowConfirmPassword}
+                                            onMouseDown={this.handleMouseDownPassword}
+                                        >
+                                            {this.state.showConfirmPassword ? <VisibilityOff/> : <Visibility/>}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
                         <Typography variant="caption" color="error">
-                            {user && user.message}
+                            {!isPasswordMatch && 'Passwords do not match'}
                         </Typography>
                     </CardContent>
                     <CardActions className={classes.cardActions}>
-                        <Button type='submit' className={classes.btn} color="primary">Sign In</Button>
-                        <Link to={'/signUp'} className={classes.link}>
+                        <Button type='submit' className={classes.btn} color="primary">Sign Up</Button>
+                        <Link to={'/signIn'} className={classes.link}>
                             <Typography variant="caption" className={classes.pg8}>
-                                No account?
+                                Have an account?
                             </Typography>
                         </Link>
                     </CardActions>
@@ -142,4 +188,4 @@ const mapStateToProps = store => ({
     user: store.user
 })
 
-export default connect(mapStateToProps)(withStyles(styles)(SignIn))
+export default connect(mapStateToProps)(withStyles(styles)(SignUp))

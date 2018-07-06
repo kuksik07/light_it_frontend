@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {withStyles} from '@material-ui/core/styles';
 import {connect} from 'react-redux'
 import AppBar from '@material-ui/core/AppBar';
@@ -24,25 +24,21 @@ const styles = {
     }
 }
 
-class Header extends Component {
-    render() {
-        const {classes, user} = this.props
-        return (
-            <AppBar position="static" className={classes.root}>
-                <Toolbar>
-                    <Link to={'/'} className={classNames(classes.link, classes.flex)}>
-                        <Typography variant="title" color="inherit">
-                            Product catalog
-                        </Typography>
-                    </Link>
-                    {user != null && user.username}
-                    <Link to={'/signIn'} className={classes.link}>
-                        <Button color="inherit">Login</Button>
-                    </Link>
-                </Toolbar>
-            </AppBar>
-        )
-    }
+const Header = ({classes, user}) => {
+    return (
+        <AppBar position="static" className={classes.root}>
+            <Toolbar>
+                <Link to={'/'} className={classNames(classes.link, classes.flex)}>
+                    <Typography variant="title" color="inherit">
+                        Product catalog
+                    </Typography>
+                </Link>
+                <Link to={'/signIn'} className={classes.link}>
+                    <Button color="inherit">Login</Button>
+                </Link>
+            </Toolbar>
+        </AppBar>
+    )
 }
 
 const mapStateToProps = (store) => ({
