@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
-import axios from 'axios'
+import {connect} from 'react-redux'
 // import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import ProductLessInfo from './ProductLessInfo'
+import {loadProducts} from "../redux/actions/product.action";
 
 const styles = {
     catalog_wrapper: {
@@ -12,38 +13,12 @@ const styles = {
 }
 
 class ProductsCatalog extends Component {
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            products: []
-        }
-    }
-
-/*    token = localStorage.getItem('token') !== null && localStorage.getItem('token').replace(/"/g, '')
-
-    config = {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Token ' + this.token
-        }
-    };*/
-
     componentDidMount() {
-        axios.get('http://smktesting.herokuapp.com/api/products/')
-            .then(res => {
-                this.setState({
-                    products: res.data
-                })
-            })
-            .catch(function (error) {
-                console.log(error)
-            });
+        this.props.dispatch(loadProducts())
     }
 
     render() {
-        const {classes} = this.props;
-        const {products} = this.state
+        const {products, classes} = this.props
         return (
             <div className={classes.catalog_wrapper}>
                 {products.map((product) =>
@@ -59,4 +34,12 @@ class ProductsCatalog extends Component {
     }
 }
 
-export default withStyles(styles)(ProductsCatalog)
+ProductsCatalog.defaultProps = {
+    products: [],
+}
+
+const mapStateToProps = store => ({
+    products: store.product.products
+})
+
+export default connect(mapStateToProps)(withStyles(styles)(ProductsCatalog))

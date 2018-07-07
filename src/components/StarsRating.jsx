@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import axios from 'axios'
+import {connect} from "react-redux"
 // import PropTypes from 'prop-types'
-import Typography from '@material-ui/core/Typography';
+import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core/styles'
 import Star from '@material-ui/icons/Star'
 import StarBorder from '@material-ui/icons/StarBorder'
 import StarHalf from '@material-ui/icons/StarHalf'
+import {loadReviews} from "../redux/actions/product.action"
 
 const styles = {
     root: {
@@ -21,32 +22,15 @@ const styles = {
 }
 
 class StarsRating extends Component{
-    constructor(props){
-        super(props)
-
-        this.state = {
-            reviews: []
-        }
-    }
-
     componentDidMount(){
-        this.getReviews(this.props.product_id);
-    }
-
-    getReviews = id => {
-        axios.get(`http://smktesting.herokuapp.com/api/reviews/${id}`)
-            .then(res => {
-                this.setState({
-                    reviews: res.data
-                })
-            })
+        this.props.dispatch(loadReviews(this.props.productId))
     }
 
     getStarsRating = () => {
         let rateSum = 0
         let reviewsCount = 0
 
-        this.state.reviews.map((review) => {
+        this.props.reviews.map((review) => {
             rateSum += review.rate;
             reviewsCount ++;
             return {}
@@ -84,4 +68,12 @@ class StarsRating extends Component{
     }
 }
 
-export default withStyles(styles)(StarsRating)
+StarsRating.defaultProps = {
+    reviews: [],
+}
+
+const mapStateToProps = store => ({
+    reviews: store.product.reviews
+})
+
+export default connect(mapStateToProps)(withStyles(styles)(StarsRating))

@@ -36,7 +36,7 @@ class ProductLessInfo extends Component{
                     <Typography gutterBottom variant="headline" component="h2">
                         { title }
                     </Typography>
-                    <StarsRating product_id = { id } />
+                    <StarsRating productId = { id } />
                 </CardContent>
                 <CardActions>
                     <Button color="primary">

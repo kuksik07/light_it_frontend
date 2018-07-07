@@ -42,7 +42,7 @@ class SignUp extends Component {
     }
 
     componentDidUpdate(prevProps, prevStates, snapshot) {
-        if (prevProps !== this.props) {
+        if (prevProps.user !== this.props.user) {
             this.props.user && this.props.user.success && this.props.history.push('/')
         }
     }
