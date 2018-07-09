@@ -16,7 +16,7 @@ const styles = {
         display: 'block',
     },
     text: {
-        margin: '8px 0 16px'
+        marginBottom: '16px'
     }
 }
 
@@ -24,19 +24,63 @@ class LeaveReview extends Component {
     state = {
         rate: 0,
         text: '',
+        errors: {
+            rate: '',
+            text: '',
+        },
+        isSubmitting: false
     }
 
-    handleChange = event => this.setState({
-        text: event.target.value
-    })
+    handleChange = event => {
+        this.setState({
+            text: event.target.value
+        })
+        this.handleTextError(event.target.value)
+    }
+
+    componentWillUpdate(nextProps, nextStates, snapshot) {
+        if (nextStates.rate !== this.state.rate) {
+            if (!nextStates.isSubmitting) {
+                let error = this.state.errors
+                error.rate = nextStates.rate === 0 ? "Please rate" : ''
+                error.rate && this.setState({
+                    errors: error
+                })
+            } else {
+                this.setState({
+                    isSubmitting: false
+                })
+            }
+        }
+    }
+
+    handleTextError = text => {
+        let error = this.state.errors
+        error.text = !text ? "Please fill in this field" : ''
+        this.setState({
+            errors: error
+        })
+    }
+
+    handleBlur = () => {
+        this.handleTextError(this.state.text)
+    }
 
     handleSubmit = event => {
         event.preventDefault()
-        this.props.dispatch(leaveReview(this.state, this.props.id))
+        if (this.state.rate !== 0 && this.state.text) {
+            let review = {rate: this.state.rate, text: this.state.text}
+            this.props.dispatch(leaveReview(review, this.props.id))
+            this.setState({
+                rate: 0,
+                text: '',
+                isSubmitting: true
+            })
+        }
     }
 
     onStarClick = value => this.setState({
-        rate: value
+        rate: value !== this.state.rate ? value : 0
     })
 
     render() {
@@ -44,40 +88,45 @@ class LeaveReview extends Component {
         const {classes} = this.props
         return (
             <div>
-            <Typography gutterBottom variant="title">
-                Leave a review
-            </Typography>
-            <div className={classes.root}>
-                <form onSubmit={this.handleSubmit}>
-                    <StarsRating
-                        value={rate}
-                        onClickStar={this.onStarClick.bind(this)}
-                        isReadOnly={false}
-                    />
-                    <TextField
-                        // error={errors.text && touched.text && true}
-                        name="text"
-                        // label={errors.text && touched.text ? errors.text : "Leave a review"}
-                        label="Leave a review"
-                        multiline
-                        rows={"2"}
-                        fullWidth
-                        value={text}
-                        onChange={this.handleChange}
-                        // onBlur={handleBlur}
-                        className={classes.text}
-                    />
-                    <Button
-                        variant='contained'
-                        type='submit'
-                        color='primary'
-                        margin="normal"
-                        className={classes.btn}
-                    >
-                        Submit review
-                    </Button>
-                </form>
-            </div>
+                <Typography gutterBottom variant="title">
+                    Send a review
+                </Typography>
+                <div className={classes.root}>
+                    <form onSubmit={this.handleSubmit}>
+                        <Typography color="error" variant="caption">
+                            {this.state.errors.rate}
+                        </Typography>
+                        <StarsRating
+                            value={rate}
+                            onClickStar={this.onStarClick.bind(this)}
+                            isReadOnly={false}
+                        />
+                        <Typography style={{display: 'inline-block', marginLeft: '8px'}} variant="caption">
+                            {rate !== 0 && `${rate} ${rate === 1 ? 'star' : 'stars'}`}
+                        </Typography>
+                        <TextField
+                            error={!!this.state.errors.text}
+                            name="text"
+                            label={this.state.errors.text ? this.state.errors.text : "Leave a review"}
+                            multiline
+                            rows={"2"}
+                            fullWidth
+                            value={text}
+                            onChange={this.handleChange}
+                            onBlur={this.handleBlur}
+                            className={classes.text}
+                        />
+                        <Button
+                            variant='contained'
+                            type='submit'
+                            color='primary'
+                            margin="normal"
+                            className={classes.btn}
+                        >
+                            Submit
+                        </Button>
+                    </form>
+                </div>
             </div>
         )
     }

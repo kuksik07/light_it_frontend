@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/es/IconButton/IconButton'
 
 const styles = {
     root: {
-        display: 'flex'
+        display: 'inline-block'
     },
     starsRead: {
         color: '#ffb74d',

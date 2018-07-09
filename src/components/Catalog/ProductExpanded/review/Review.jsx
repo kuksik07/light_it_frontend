@@ -40,7 +40,7 @@ const initialsFromUsername = username => {
         initials = username.charAt(0).toUpperCase();
         if (username.length === 1)
             return initials;
-        let numbers = parseInt(username.replace(/\D+/g, ""), 10);
+        let numbers = parseInt(username.replace(/\D+/g, ""), 10).toString();
         if (!isNaN(numbers))
             return initials + numbers[0].toUpperCase();
         else
