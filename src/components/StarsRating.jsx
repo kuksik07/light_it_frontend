@@ -1,66 +1,84 @@
-import React, { Component } from 'react'
-import {connect} from "react-redux"
+import React, {Component} from 'react'
 // import PropTypes from 'prop-types'
-import Typography from '@material-ui/core/Typography'
-import { withStyles } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography';
+import {withStyles} from '@material-ui/core/styles'
 import Star from '@material-ui/icons/Star'
 import StarBorder from '@material-ui/icons/StarBorder'
 import StarHalf from '@material-ui/icons/StarHalf'
-import {loadReviews} from "../redux/actions/product.action"
+import IconButton from '@material-ui/core/es/IconButton/IconButton'
 
 const styles = {
     root: {
         display: 'flex'
     },
-    stars: {
+    starsRead: {
         color: '#ffb74d',
         fontSize: '18px'
     },
+    starsNoReadEmpty: {
+        color: '#b0bec5',
+    },
     text: {
         margin: 'auto 10px'
+    },
+    iconBtn: {
+        width: '32px',
+        height: '32px',
     }
 }
 
-class StarsRating extends Component{
-    componentDidMount(){
-        this.props.dispatch(loadReviews(this.props.productId))
-    }
-
-    getStarsRating = () => {
-        let rateSum = 0
-        let reviewsCount = 0
-
-        this.props.reviews.map((review) => {
-            rateSum += review.rate;
-            reviewsCount ++;
-            return {}
-        })
-
-        const rateAvg = rateSum / (reviewsCount + 1)
+class StarsRating extends Component {
+    renderStars = () => {
+        const {classes, isReadOnly, onClickStar, value} = this.props
 
         let stars = []
 
-        for (let i = 0; i < 5; i++ ){
-            if (rateAvg - i >= 0.75) {
-                stars.push(<Star key = {i} className = {this.props.classes.stars} />)
-            } else if (rateAvg - i >= 0.25 && rateAvg - i < 0.75 ) {
-                stars.push(<StarHalf key = {i} className = {this.props.classes.stars} />)
-            } else {
-                stars.push(<StarBorder key = {i} className = {this.props.classes.stars} />)
+        if (isReadOnly) {
+            for (let i = 0; i < 5; i++) {
+                if (value - i >= 0.75) {
+                    stars.push(<Star key={i} className={this.props.classes.starsRead}/>)
+                } else if (value - i >= 0.25 && value - i < 0.75) {
+                    stars.push(<StarHalf key={i} className={this.props.classes.starsRead}/>)
+                } else {
+                    stars.push(<StarBorder key={i} className={this.props.classes.starsRead}/>)
+                }
+            }
+        } else {
+            for (let i = 0; i < 5; i++) {
+                if (value - i >= 1) {
+                    stars.push(
+                        <IconButton
+                            key={i}
+                            className={classes.iconBtn}
+                            color="primary"
+                            onClick={() => onClickStar(++i)}
+                        >
+                            <Star/>
+                        </IconButton>
+                    )
+                } else {
+                    stars.push(
+                        <IconButton
+                            key={i}
+                            className={classes.iconBtn}
+                            onClick={() => onClickStar(++i)}>
+                            <Star className={classes.starsNoReadEmpty}/>
+                        </IconButton>
+                    )
+                }
             }
         }
-        return {stars, rateAvg, reviewsCount}
+        return stars
     }
 
-    render () {
-        const { classes } = this.props
-        let starRating = this.getStarsRating()
+    render() {
+        const {classes, countReviews, value} = this.props
         return (
             <React.Fragment>
                 <div className={classes.root}>
-                    {starRating.stars}
+                    {this.renderStars()}
                     <Typography variant="caption" className={classes.text}>
-                        {`${starRating.rateAvg.toFixed(2)} (${starRating.reviewsCount})`}
+                        {countReviews && `${value.toFixed(2)} (${countReviews})`}
                     </Typography>
                 </div>
             </React.Fragment>
@@ -68,12 +86,4 @@ class StarsRating extends Component{
     }
 }
 
-StarsRating.defaultProps = {
-    reviews: [],
-}
-
-const mapStateToProps = store => ({
-    reviews: store.product.reviews
-})
-
-export default connect(mapStateToProps)(withStyles(styles)(StarsRating))
+export default withStyles(styles)(StarsRating)

@@ -1,8 +1,11 @@
-import {LOAD_PRODUCTS, LOAD_REVIEWS, LEAVE_REVIEW} from "../actions/product.action";
+import {LOAD_PRODUCTS, LOAD_PRODUCT, LOAD_REVIEWS, LEAVE_REVIEW,} from "../actions/product.action";
 
 const initialState = {
     products: [],
+    product: null,
     reviews: [],
+
+    leaveReviewResponse: null
 }
 
 const product = (state = initialState, {type, payload}) => {
@@ -11,6 +14,12 @@ const product = (state = initialState, {type, payload}) => {
             return {
                 ...state,
                 products: payload
+            }
+        }
+        case LOAD_PRODUCT: {
+            return {
+                ...state,
+                product: payload
             }
         }
         case LOAD_REVIEWS: {
@@ -22,7 +31,7 @@ const product = (state = initialState, {type, payload}) => {
         case LEAVE_REVIEW: {
             return {
                 ...state,
-                reviews: payload
+                leaveReviewResponse: payload
             }
         }
         default: {

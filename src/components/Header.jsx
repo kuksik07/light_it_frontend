@@ -34,11 +34,11 @@ const styles = {
 class Header extends Component {
     state = {
         value: 0,
-    };
+    }
 
     handleChange = (event, value) => {
         this.setState({value});
-    };
+    }
 
     handleChangeLocation = () => {
         switch (this.props.history.location.pathname) {
@@ -52,6 +52,14 @@ class Header extends Component {
                 return this.setState({value: 0});
         }
     }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.history.location !== this.props.history.location) {
+            console.log('this', nextProps.history.location)
+            console.log('next', this.props.history.location)
+        }
+    }
+
 
     componentWillMount() {
         this.handleChangeLocation()
@@ -70,7 +78,6 @@ class Header extends Component {
                         value={value}
                         onChange={this.handleChange}
                         className={classes.tabs}
-                        indicatorColor="secondary"
                     >
                         <Tab label="Home" component={Link} to='/'/>
                         <Tab label="Login" component={Link} to='/signIn'/>
@@ -81,7 +88,6 @@ class Header extends Component {
         )
     }
 }
-
 
 const mapStateToProps = (store) => ({
     user: store.user

@@ -7,7 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import StarsRating from './StarsRating'
+import {Link} from "react-router-dom";
 
 const styles = {
     card: {
@@ -22,7 +22,7 @@ const styles = {
     },
 };
 
-class ProductLessInfo extends Component{
+class CatalogProduct extends Component{
     render () {
         const { classes, imagePath, title, id } = this.props;
         return (
@@ -36,10 +36,9 @@ class ProductLessInfo extends Component{
                     <Typography gutterBottom variant="headline" component="h2">
                         { title }
                     </Typography>
-                    <StarsRating productId = { id } />
                 </CardContent>
                 <CardActions>
-                    <Button color="primary">
+                    <Button color="primary" component={Link} to={`/products/${id}`}>
                         Learn More
                     </Button>
                 </CardActions>
@@ -48,8 +47,8 @@ class ProductLessInfo extends Component{
     }
 }
 
-ProductLessInfo.propTypes = {
+CatalogProduct.propTypes = {
     classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(ProductLessInfo)
+export default withStyles(styles)(CatalogProduct)

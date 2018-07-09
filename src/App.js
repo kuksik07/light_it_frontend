@@ -1,9 +1,10 @@
 import React from 'react';
-import {BrowserRouter as Router, Route} from "react-router-dom";
+import {BrowserRouter as Router, Route, Redirect} from "react-router-dom";
 import Header from './components/Header'
-import ProductsCatalog from './components/ProductsCatalog'
-import SignIn from './components/SignIn'
-import SignUp from './components/SignUp'
+import Catalog from './components/Catalog/Catalog'
+import SignIn from './components/auth/SignIn'
+import SignUp from './components/auth/SignUp'
+import ProductExpanded from './components/Catalog/ProductExpanded'
 import {createMuiTheme, MuiThemeProvider} from "@material-ui/core/es/styles/";
 import cyan from '@material-ui/core/colors/cyan';
 
@@ -25,9 +26,11 @@ const App = () => {
         <Router>
             <MuiThemeProvider theme={theme}>
                 <Header/>
-                <Route exact path={'/'} component={ProductsCatalog}/>
-                <Route path={'/signIn'} component={SignIn}/>
-                <Route path={'/signUp'} component={SignUp}/>
+                <Route exact path={'/'} render={() => <Redirect to="/products"/>}/>
+                <Route exact path={'/products'} component={Catalog}/>
+                <Route exact path={'/signIn'} component={SignIn}/>
+                <Route exact path={'/signUp'} component={SignUp}/>
+                <Route path={'/products/:id'} component={ProductExpanded}/>
             </MuiThemeProvider>
         </Router>
     )

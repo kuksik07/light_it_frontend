@@ -7,7 +7,6 @@ export const signIn = data => async dispatch => {
     await dispatch ({
         type: SIGN_IN,
         payload: await axios.post('http://smktesting.herokuapp.com/api/login/', data)
-
     })
 }
 

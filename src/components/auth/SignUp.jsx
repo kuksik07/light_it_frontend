@@ -15,7 +15,7 @@ import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import IconButton from '@material-ui/core/es/IconButton/IconButton'
 import InputAdornment from '@material-ui/core/es/InputAdornment/InputAdornment'
-import {signUp} from "../redux/actions/auth.action"
+import {signUp} from "../../redux/actions/auth.action"
 
 const styles = {
     card: {
