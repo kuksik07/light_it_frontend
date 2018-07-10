@@ -11,9 +11,9 @@ const styles = {
     root: {
         display: 'flex'
     },
-    starsRead: {
+    starFullReadOnly: {
         color: '#ffb74d',
-        fontSize: '18px'
+        fontSize: '20px'
     },
     starsNoReadEmpty: {
         color: '#b0bec5',
@@ -37,11 +37,11 @@ class StarsRating extends Component {
         if (isReadOnly) {
             for (let i = 0; i < 5; i++) {
                 if (value - i >= 0.75) {
-                    stars.push(<Star key={i} className={this.props.classes.starsRead}/>)
+                    stars.push(<Star key={i} className={classes.starFullReadOnly}/>)
                 } else if (value - i >= 0.25 && value - i < 0.75) {
-                    stars.push(<StarHalf key={i} className={this.props.classes.starsRead}/>)
+                    stars.push(<StarHalf key={i} className={classes.starFullReadOnly}/>)
                 } else {
-                    stars.push(<StarBorder key={i} className={this.props.classes.starsRead}/>)
+                    stars.push(<StarBorder key={i} className={classes.starFullReadOnly}/>)
                 }
             }
         } else {
@@ -51,7 +51,7 @@ class StarsRating extends Component {
                         <IconButton
                             key={i}
                             className={classes.iconBtn}
-                            color="primary"
+                            style = {{color: '#ffb74d'}}
                             onClick={() => onClickStar(++i)}
                         >
                             <Star/>

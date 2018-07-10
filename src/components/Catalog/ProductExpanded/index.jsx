@@ -10,6 +10,7 @@ class ProductExpanded extends Component {
     componentWillMount() {
         this.props.dispatch(loadProduct(this.props.match.params.id))
     }
+
     render() {
         const {product} = this.props
         return (

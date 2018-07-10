@@ -13,6 +13,7 @@ import Button from "@material-ui/core/es/Button/Button";
 import Menu from "@material-ui/core/es/Menu/Menu";
 import MenuItem from "@material-ui/core/es/MenuItem/MenuItem";
 import {logout} from "../redux/actions/auth.action";
+import IconButton from "@material-ui/core/es/IconButton/IconButton";
 
 const styles = {
     root: {
@@ -36,42 +37,42 @@ const styles = {
     },
     user: {
         display: 'flex',
+        alignItems: 'center',
     },
 }
 
 class Header extends Component {
     state = {
-        value: 0,
         anchorEl: null
     }
 
     onLogout = () => {
-        this.setState({ anchorEl: null })
+        this.setState({anchorEl: null})
         this.props.dispatch(logout())
     }
 
     handleMenu = event => {
-        this.setState({ anchorEl: event.currentTarget })
+        this.setState({anchorEl: event.currentTarget})
     }
 
     handleClose = () => {
-        this.setState({ anchorEl: null })
+        this.setState({anchorEl: null})
     }
 
     handleChangeTab = (event, value) => {
-        this.setState({value});
+        this.setState({value})
     }
 
-    handleChangeLocation = () => {
-        switch (this.props.history.location.pathname) {
-            case ('/'):
-                return this.setState({value: 0});
+    handleChangeLocation = (path) => {
+        switch (path) {
+            case ('/products'):
+                return 0;
             case ('/signIn'):
-                return this.setState({value: 1});
+                return 1
             case ('/signUp'):
-                return this.setState({value: 2});
+                return 2
             default:
-                return this.setState({value: 0});
+                return 0
         }
     }
 
@@ -87,18 +88,18 @@ class Header extends Component {
     }
 
     render() {
-        const {classes, user} = this.props
-        const {value, anchorEl} = this.state
-        console.log(user)
+        const {classes} = this.props
+        const {anchorEl} = this.state
+        let path = this.props.history.location.pathname
         return (
             <AppBar position="static" color="primary" className={classes.root}>
                 <Toolbar>
                     <Typography variant="title" color="inherit" className={classes.flex}>
                         Product catalog
                     </Typography>
-                    {!user ?
+                    {!localStorage.getItem('token') ?
                         <Tabs
-                            value={value}
+                            value={this.handleChangeLocation(path)}
                             onChange={this.handleChangeTab}
                             className={classes.tabs}
                         >
@@ -108,13 +109,17 @@ class Header extends Component {
                         </Tabs>
                         :
                         <div>
-                            <Tab label="Home" component={Link} to='/'/>
-                            <Button color="secondary" style={{minWidth: '160px'}} onClick={this.handleMenu}>
-                                <AccountCircle/>
-                                <Typography variant="body2" color="inherit" style={{marginLeft: '8px'}}>
-                                    {localStorage.getItem('username')}
-                                </Typography>
-                            </Button>
+                            <div className={classes.user}>
+                                <Button component={Link} to='/' size="large" style={{width: '160px'}} color="secondary">
+                                    Home
+                                </Button>
+                                <Button color="secondary" size="large" onClick={this.handleMenu}>
+                                    <AccountCircle/>
+                                    <Typography variant="body2" color="inherit" style={{marginLeft: '8px'}}>
+                                        {localStorage.getItem('username')}
+                                    </Typography>
+                                </Button>
+                            </div>
                             <Menu
                                 id="menu-appbar"
                                 anchorEl={anchorEl}
@@ -129,7 +134,6 @@ class Header extends Component {
                                 open={Boolean(anchorEl)}
                                 onClose={this.handleClose}
                             >
-                                <MenuItem onClick={this.handleClose}>Back</MenuItem>
                                 <MenuItem onClick={this.onLogout}>Logout</MenuItem>
                             </Menu>
                         </div>

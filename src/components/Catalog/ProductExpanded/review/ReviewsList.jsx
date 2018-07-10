@@ -21,10 +21,10 @@ class ReviewsList extends Component {
     }
 
     render() {
-        const {classes, reviews, id, user} = this.props;
+        const {classes, reviews, id} = this.props;
         return (
             <div className={classes.root}>
-                {user ? <LeaveReview id={id}/> :
+                {localStorage.getItem('token') ? <LeaveReview id={id}/> :
                     <Typography gutterBottom color="primary" align="center" variant="body1">
                         <Link style={{color: 'inherit'}} to={'/signUp'}>Sign up</Link> to leave a comment
                     </Typography>

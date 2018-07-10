@@ -5,13 +5,15 @@ export const LOAD_PRODUCT = 'LOAD_PRODUCT'
 export const LOAD_REVIEWS = 'LOAD_REVIEWS'
 export const LEAVE_REVIEW = 'LEAVE_A_REVIEW'
 
-const config = token => ({
+const config = () => ({
     headers: {
-        'Authorization': `Token ${token}`
+        'Authorization': `Token ${localStorage.getItem('token') && localStorage.getItem('token') || ''}`
     }
 })
 
 export const loadProducts = () => async dispatch => {
+    localStorage.hasOwnProperty('token') && axios.get('http://smktesting.herokuapp.com/api/products/', config())
+        .catch(() => localStorage.clear())
     await dispatch({
         type: LOAD_PRODUCTS,
         payload: await axios.get('http://smktesting.herokuapp.com/api/products/')
@@ -20,6 +22,8 @@ export const loadProducts = () => async dispatch => {
 }
 
 export const loadProduct = id => async dispatch => {
+    localStorage.hasOwnProperty('token') && axios.get('http://smktesting.herokuapp.com/api/products/', config())
+        .catch(() => localStorage.clear())
     await dispatch({
         type: LOAD_PRODUCT,
         payload: await axios.get('http://smktesting.herokuapp.com/api/products/')
@@ -27,7 +31,9 @@ export const loadProduct = id => async dispatch => {
     })
 }
 
-export const loadReviews = id =>  async dispatch => {
+export const loadReviews = id => async dispatch => {
+    localStorage.hasOwnProperty('token') && axios.get(`http://smktesting.herokuapp.com/api/reviews/${id}`, config())
+        .catch(() => localStorage.clear())
     await dispatch({
         type: LOAD_REVIEWS,
         payload: await axios.get(`http://smktesting.herokuapp.com/api/reviews/${id}`)
@@ -36,10 +42,10 @@ export const loadReviews = id =>  async dispatch => {
 }
 
 export const leaveReview = (data, id) => async dispatch => {
-    const token = localStorage.getItem('token')
     await dispatch({
         type: LEAVE_REVIEW,
-        payload: await axios.post(`http://smktesting.herokuapp.com/api/reviews/${id}`, data, config(token))
+        payload: await axios.post(`http://smktesting.herokuapp.com/api/reviews/${id}`, data, config())
             .then(res => res.data)
     })
 }
+

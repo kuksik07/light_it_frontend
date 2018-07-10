@@ -77,7 +77,7 @@ class ProductInfo extends Component {
                         title={product.title}
                     />
                     <CardContent className={classes.content}>
-                        <Typography variant="headline">
+                        <Typography gutterBottom variant="headline">
                             {product.title}
                         </Typography>
                         <StarsRating isReadOnly={true} value={rate} countReviews={rateReviewsCount}/>
