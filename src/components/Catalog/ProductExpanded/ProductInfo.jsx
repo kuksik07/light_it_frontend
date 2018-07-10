@@ -23,8 +23,8 @@ const styles = {
     },
     media: {
         backgroundSize: 'contain',
-        width: '225px',
-        height: '215px',
+        width: '200px',
+        height: '200px',
     },
     description: {
         margin: '16px 0',
@@ -37,8 +37,8 @@ class ProductInfo extends Component {
         rateReviewsCount: null
     }
 
-    getRating = async () => {
-        await this.props.dispatch(loadReviews(this.props.id))
+    getRating = () => {
+        this.props.dispatch(loadReviews(this.props.id))
         let rateSum = 0
         let reviewsCount = 0
 

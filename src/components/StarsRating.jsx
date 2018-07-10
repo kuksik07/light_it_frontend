@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/es/IconButton/IconButton'
 
 const styles = {
     root: {
-        display: 'inline-block'
+        display: 'flex'
     },
     starsRead: {
         color: '#ffb74d',
@@ -19,7 +19,8 @@ const styles = {
         color: '#b0bec5',
     },
     text: {
-        margin: 'auto 10px'
+        margin: 'auto 10px',
+        display: 'inline-block'
     },
     iconBtn: {
         width: '32px',
@@ -72,13 +73,15 @@ class StarsRating extends Component {
     }
 
     render() {
-        const {classes, countReviews, value} = this.props
+        const {classes, countReviews, value, isReadOnly} = this.props
         return (
             <React.Fragment>
                 <div className={classes.root}>
                     {this.renderStars()}
                     <Typography variant="caption" className={classes.text}>
-                        {countReviews && `${value.toFixed(2)} (${countReviews})`}
+                        {isReadOnly ? countReviews && `${value.toFixed(2)} (${countReviews})` :
+                            value !== 0 && `${value} ${value === 1 ? 'star' : 'stars'}`
+                        }
                     </Typography>
                 </div>
             </React.Fragment>

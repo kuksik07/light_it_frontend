@@ -17,7 +17,7 @@ class ProductExpanded extends Component {
                 {
                     product &&
                     <Fragment>
-                        <Paper elevation={4} style={{width: '800px', padding: '16px', margin: '16px auto 0'}}>
+                        <Paper style={{width: '800px', padding: '16px', margin: '16px auto 0'}}>
                             <ProductMoreInfo id={product.id} product={product}/>
                             <ReviewsList id={product.id}/>
                         </Paper>

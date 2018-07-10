@@ -7,9 +7,9 @@ import {loadReviews} from "../../../../redux/actions/product.action"
 import Review from "./Review";
 import LeaveReview from './LeaveReview'
 import moment from "moment/moment";
+import {Link} from "react-router-dom";
 
-const styles = {
-};
+const styles = {};
 
 class ReviewsList extends Component {
     componentWillReceiveProps(nextProps) {
@@ -21,10 +21,14 @@ class ReviewsList extends Component {
     }
 
     render() {
-        const {classes, reviews, id} = this.props;
+        const {classes, reviews, id, user} = this.props;
         return (
             <div className={classes.root}>
-                <LeaveReview id={id}/>
+                {user ? <LeaveReview id={id}/> :
+                    <Typography gutterBottom color="primary" align="center" variant="body1">
+                        <Link style={{color: 'inherit'}} to={'/signUp'}>Sign up</Link> to leave a comment
+                    </Typography>
+                }
                 <Typography gutterBottom variant="title">
                     Reviews
                 </Typography>
@@ -51,11 +55,13 @@ ReviewsList.propTypes = {
 }
 
 ReviewsList.defaultProps = {
+    user: null,
     reviews: [],
     leaveReviewResponse: null
 }
 
 const mapStateToProps = store => ({
+    user: store.auth.user,
     reviews: store.product.reviews.sort((a, b) => moment(b.created_at) - moment(a.created_at)),
     leaveReviewResponse: store.product.leaveReviewResponse
 })

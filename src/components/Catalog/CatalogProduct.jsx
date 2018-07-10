@@ -24,21 +24,24 @@ const styles = {
 
 class CatalogProduct extends Component{
     render () {
-        const { classes, imagePath, title, id } = this.props;
+        const { classes, product } = this.props;
         return (
             <Card className={classes.card}>
                 <CardMedia
                     className={classes.media}
-                    image={imagePath}
-                    title={title}
+                    image={`http://smktesting.herokuapp.com/static/${product.img}`}
+                    title={product.title}
                 />
                 <CardContent>
                     <Typography gutterBottom variant="headline" component="h2">
-                        { title }
+                        { product.title }
+                    </Typography>
+                    <Typography variant="subheading" color="textSecondary" >
+                        { product.text }
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <Button color="primary" component={Link} to={`/products/${id}`}>
+                    <Button color="primary" component={Link} to={`/products/${product.id}`}>
                         Learn More
                     </Button>
                 </CardActions>

@@ -16,6 +16,7 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import IconButton from '@material-ui/core/es/IconButton/IconButton'
 import InputAdornment from '@material-ui/core/es/InputAdornment/InputAdornment'
 import {signIn} from '../../redux/actions/auth.action'
+import MessageSnackbar from "../MessageSnackbar";
 
 const styles = {
     card: {
@@ -70,6 +71,8 @@ class SignIn extends Component {
             handleSubmit,
         } = this.props
         return (
+            <div>
+                <MessageSnackbar text="You have been successfully authorized" open={!!user}/>
             <form onSubmit={handleSubmit}>
                 <Card raised className={classes.card}>
                     <CardContent>
@@ -133,6 +136,7 @@ class SignIn extends Component {
                     </CardActions>
                 </Card>
             </form>
+            </div>
         )
     }
 }

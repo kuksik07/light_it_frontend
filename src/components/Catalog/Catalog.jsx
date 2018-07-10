@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 // import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles'
-import ProductLessInfo from './CatalogProduct'
+import CatalogProduct from './CatalogProduct'
 import {loadProducts} from "../../redux/actions/product.action"
 
 const styles = {
@@ -22,11 +22,9 @@ class Catalog extends Component {
         return (
             <div className={classes.catalog_wrapper}>
                 {products.map((product, index) =>
-                    <ProductLessInfo
+                    <CatalogProduct
                         key={product.id}
-                        imagePath={`http://smktesting.herokuapp.com/static/${product.img}`}
-                        title={product.title}
-                        id={product.id}
+                        product={product}
                     />
                 )}
             </div>

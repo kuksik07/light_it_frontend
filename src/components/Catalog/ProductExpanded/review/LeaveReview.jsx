@@ -41,17 +41,21 @@ class LeaveReview extends Component {
     componentWillUpdate(nextProps, nextStates, snapshot) {
         if (nextStates.rate !== this.state.rate) {
             if (!nextStates.isSubmitting) {
-                let error = this.state.errors
-                error.rate = nextStates.rate === 0 ? "Please rate" : ''
-                error.rate && this.setState({
-                    errors: error
-                })
+                this.handleRateError(nextStates.rate)
             } else {
                 this.setState({
                     isSubmitting: false
                 })
             }
         }
+    }
+
+    handleRateError = rate => {
+        let error = this.state.errors
+        error.rate = rate === 0 ? "Please rate" : ''
+        this.setState({
+            errors: error
+        })
     }
 
     handleTextError = text => {
@@ -76,6 +80,9 @@ class LeaveReview extends Component {
                 text: '',
                 isSubmitting: true
             })
+        } else {
+            if (!this.state.text) this.handleTextError(this.state.text)
+            if (this.state.rate === 0) this.handleRateError(this.state.rate)
         }
     }
 
@@ -101,9 +108,6 @@ class LeaveReview extends Component {
                             onClickStar={this.onStarClick.bind(this)}
                             isReadOnly={false}
                         />
-                        <Typography style={{display: 'inline-block', marginLeft: '8px'}} variant="caption">
-                            {rate !== 0 && `${rate} ${rate === 1 ? 'star' : 'stars'}`}
-                        </Typography>
                         <TextField
                             error={!!this.state.errors.text}
                             name="text"
