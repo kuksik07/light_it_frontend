@@ -1,43 +1,58 @@
-import {LOAD_PRODUCTS, LOAD_PRODUCT, LOAD_REVIEWS, LEAVE_REVIEW,} from "../actions/product.action";
+import { GET_PRODUCTS, GET_PRODUCT } from '../actions/product.action'
 
 const initialState = {
-    products: [],
-    product: null,
-    reviews: [],
-
-    leaveReviewResponse: null
+  loading: false,
+  error: null,
+  products: [],
+  product: null
 }
 
-const product = (state = initialState, {type, payload}) => {
-    switch (type) {
-        case LOAD_PRODUCTS: {
-            return {
-                ...state,
-                products: payload
-            }
-        }
-        case LOAD_PRODUCT: {
-            return {
-                ...state,
-                product: payload
-            }
-        }
-        case LOAD_REVIEWS: {
-            return {
-                ...state,
-                reviews: payload
-            }
-        }
-        case LEAVE_REVIEW: {
-            return {
-                ...state,
-                leaveReviewResponse: payload
-            }
-        }
-        default: {
-            return state
-        }
+const product = (state = initialState, { type, payload }) => {
+  switch (type) {
+    case GET_PRODUCTS + '_PENDING':
+      return {
+        ...state,
+        loading: true,
+      }
+
+    case GET_PRODUCTS + '_FULFILLED':
+      return {
+        ...state,
+        products: payload,
+        loading: false
+      }
+
+    case GET_PRODUCTS + '_REJECTED':
+      return {
+        ...state,
+        errors: payload,
+        loading: false
+      }
+
+    case GET_PRODUCT + '_PENDING':
+      return {
+        ...state,
+        loading: true,
+      }
+
+    case GET_PRODUCT + '_FULFILLED':
+      return {
+        ...state,
+        product: payload,
+        loading: false
+      }
+
+    case GET_PRODUCT + '_REJECTED':
+      return {
+        ...state,
+        error: payload,
+        loading: false
+      }
+
+    default: {
+      return state
     }
+  }
 }
 
 export default product

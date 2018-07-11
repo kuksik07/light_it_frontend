@@ -1,35 +1,27 @@
-import axios from 'axios'
+import * as API from '../../services/api'
+import { getUser } from '../../services/storage'
 
 export const SIGN_IN = 'SIGN_IN'
 export const SIGN_UP = 'SIGN_UP'
 export const LOGOUT = 'LOGOUT'
 
-const deleteUser = () => {
-    // localStorage.clear()
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-}
+export const signIn = data => !data ?
+  ({
+    type: SIGN_IN + '_FULFILLED',
+    payload: getUser(),
+  }) : ({
+    type: SIGN_IN,
+    payload: API.auth.signIn(data),
+  })
 
-export const signIn = data => async dispatch => {
-    console.log(data)
-    localStorage.setItem("username", data.username)
-    await dispatch({
-        type: SIGN_IN,
-        payload: await axios.post('http://smktesting.herokuapp.com/api/login/', data)
-    })
-}
-
-export const signUp = data => async dispatch => {
-    localStorage.setItem("username", data.username)
-    await dispatch({
-        type: SIGN_UP,
-        payload: await axios.post('http://smktesting.herokuapp.com/api/register/', data)
-    })
-}
+export const signUp = data => ({
+  type: SIGN_UP,
+  payload: API.auth.signUp(data)
+})
 
 export const logout = () => async dispatch => {
-    await dispatch({
-        type: LOGOUT,
-        payload: await deleteUser()
-    })
+  localStorage.clear()
+  await dispatch({
+    type: LOGOUT,
+  })
 }
