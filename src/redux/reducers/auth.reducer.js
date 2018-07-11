@@ -3,6 +3,7 @@ import { SIGN_IN, SIGN_UP, LOGOUT } from '../actions/auth.action'
 const initialState = {
   loading: false,
   error: null,
+  errorSignUp: null,
   user: null,
 }
 
@@ -24,7 +25,7 @@ const auth = (state = initialState, { type, payload }) => {
     case SIGN_UP + '_REJECTED':
       return {
         ...state,
-        error: payload,
+        errorSignUp: payload,
         loading: false
       }
 

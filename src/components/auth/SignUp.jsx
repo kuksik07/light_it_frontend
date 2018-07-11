@@ -190,7 +190,7 @@ SignUp.defaultProps = {
 
 const mapStateToProps = store => ({
   user: store.auth.user,
-  error: store.auth.error
+  error: store.auth.errorSignUp
 })
 
 export default connect(mapStateToProps)(withFormik({
