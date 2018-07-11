@@ -7,6 +7,7 @@ import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
 import StarsRating from '../../StarsRating'
 import { connect } from 'react-redux'
+import { getReviews } from '../../../redux/actions/review.action'
 
 const styles = {
   wrapper: {
@@ -31,13 +32,14 @@ const styles = {
   },
 }
 
-class ProductInfo extends Component {
+class ProductMoreInfo extends Component {
   state = {
     rate: null,
     rateReviewsCount: null
   }
 
   getRating = () => {
+    this.props.dispatch(getReviews(this.props.product.id))
     let rateSum = 0
     let reviewsCount = 0
 
@@ -90,14 +92,14 @@ class ProductInfo extends Component {
   }
 }
 
-ProductInfo.propTypes = {
+ProductMoreInfo.propTypes = {
   classes: PropTypes.object.isRequired,
   product: PropTypes.object.isRequired,
   reviews: PropTypes.array.isRequired,
 }
 
 const mapStateToProps = store => ({
-  reviews: store.review.reviews
+  reviews: store.review.reviews,
 })
 
-export default connect(mapStateToProps)(withStyles(styles)(ProductInfo))
+export default connect(mapStateToProps)(withStyles(styles)(ProductMoreInfo))

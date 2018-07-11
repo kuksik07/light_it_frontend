@@ -1,7 +1,7 @@
 import React, { Fragment, Component } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles/index'
-import ProductMoreInfo from './ProductInfo'
+import ProductMoreInfo from './ProductMoreInfo'
 import ReviewsList from './review/ReviewsList'
 import Paper from '@material-ui/core/es/Paper/Paper'
 import { connect } from 'react-redux'
@@ -28,8 +28,8 @@ class ProductExpanded extends Component {
           product &&
           <Fragment>
             <Paper className={classes.root}>
-              <ProductMoreInfo id={product.id} product={product} />
-              <ReviewsList id={product.id} />
+              <ProductMoreInfo product={product} />
+              <ReviewsList />
             </Paper>
           </Fragment>
         }
