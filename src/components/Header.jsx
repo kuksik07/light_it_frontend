@@ -14,6 +14,7 @@ import Menu from '@material-ui/core/es/Menu/Menu'
 import MenuItem from '@material-ui/core/es/MenuItem/MenuItem'
 import { logout } from '../redux/actions/auth.action'
 import { connect } from 'react-redux'
+import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress'
 
 const styles = {
   root: {
@@ -43,7 +44,8 @@ const styles = {
 
 class Header extends Component {
   state = {
-    anchorEl: null
+    anchorEl: null,
+    path: ''
   }
 
   onLogout = () => {
@@ -63,27 +65,33 @@ class Header extends Component {
     this.setState({ value })
   }
 
+  componentDidUpdate(nextProps, nextStates, snapshot) {
+    if (this.props.location.pathname !== nextProps.location.pathname) {
+      let path = this.props.location.pathname
+      this.handleChangeLocation(path)
+    }
+  }
+
   handleChangeLocation = (path) => {
     switch (path) {
       case ('/products'):
-        return 0
+        return this.setState({ value: 0 })
       case ('/signIn'):
-        return 1
+        return this.setState({ value: 1 })
       case ('/signUp'):
-        return 2
+        return this.setState({ value: 2 })
       default:
-        return 0
+        return this.setState({ value: 0 })
     }
   }
 
   componentWillMount() {
-    this.handleChangeLocation()
+    this.handleChangeLocation(this.props.location.pathname)
   }
 
   render() {
     const { classes, user } = this.props
-    const { anchorEl } = this.state
-    let path = this.props.history.location.pathname
+    const { anchorEl, value } = this.state
     return (
       <AppBar position="static" color="primary" className={classes.root}>
         <Toolbar>
@@ -92,7 +100,7 @@ class Header extends Component {
           </Typography>
           {!user ?
             <Tabs
-              value={this.handleChangeLocation(path)}
+              value={value}
               onChange={this.handleChangeTab}
               className={classes.tabs}
             >

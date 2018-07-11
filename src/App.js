@@ -35,7 +35,7 @@ class App extends React.Component {
     return (
       <Router>
         <MuiThemeProvider theme={theme}>
-          <Header />
+          <Route path={'/'} component={Header} />
           <Route exact path={'/'} render={() => <Redirect to="/products" />} />
           <Route exact path={'/products'} component={Catalog} />
           <Route exact path={'/signIn'} component={SignIn} />
