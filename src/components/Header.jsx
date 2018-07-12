@@ -14,7 +14,6 @@ import Menu from '@material-ui/core/es/Menu/Menu'
 import MenuItem from '@material-ui/core/es/MenuItem/MenuItem'
 import { logout } from '../redux/actions/auth.action'
 import { connect } from 'react-redux'
-import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress'
 
 const styles = {
   root: {

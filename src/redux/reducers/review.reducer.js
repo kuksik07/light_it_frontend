@@ -42,7 +42,10 @@ const review = (state = initialState, { type, payload }) => {
 
     case SEND_REVIEW + '_FULFILLED': {
       state.loading = false
-      return state
+      return {
+        ...state,
+        sendReviewError: null
+      }
     }
 
     default: {

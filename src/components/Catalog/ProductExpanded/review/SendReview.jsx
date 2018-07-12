@@ -8,6 +8,7 @@ import { sendReview } from '../../../../redux/actions/review.action'
 import StarsRating from '../../../StarsRating'
 import Typography from '@material-ui/core/es/Typography/Typography'
 import { Link } from 'react-router-dom'
+import { logout } from '../../../../redux/actions/auth.action'
 
 const styles = {
   root: {
@@ -49,9 +50,6 @@ class SendReview extends Component {
         })
       }
     }
-    /*    if (nextProps.review.sendReviewError !== this.props.review.sendReviewError) {
-          this.props.dispatch(logout())
-        }*/
   }
 
   handleRateError = rate => {
